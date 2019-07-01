@@ -3,6 +3,8 @@ import scipy as sp
 import scipy.linalg as la
 import matplotlib.pyplot as plt
 import time
+from scipy import sparse
+import  scipy.sparse.linalg as spla
 
 tLeft = 100 #Tempreture of first element
 tRight = 0 #Tempreture of last element
@@ -17,6 +19,7 @@ diagonalMat = np.diag(diameter1).reshape((intervals,intervals))
 diagonalMat1 = np.roll(diagonalMat,1)
 diagonalMat2 = np.roll(diagonalMat, -1)
 coeffMat = diagonalMat0 + diagonalMat1 + diagonalMat2
+sparsCoeffMat = sparse.coo_matrix(coeffMat)
 ##############################################
 #initial tempreture of the line
 knownTemp = np.zeros(intervals)
@@ -26,7 +29,8 @@ knownTemp[99] = tRight
 unknownTemp = np.zeros(intervals)
 n = 0 #some constant to make png sequences
 for i in range(0,20000):
-    unknownTemp = la.solve(coeffMat,knownTemp) #solving linear algebra Ax = b with scipy library
+    #unknownTemp = la.solve(coeffMat,knownTemp) #solving linear algebra Ax = b with scipy library
+    unknownTemp = spla.spsolve(sparsCoeffMat, knownTemp)
     knownTemp[1:intervals-2] = unknownTemp[1:intervals-2] #giving the finial matrix values to initial matrix to start one more period
     if (i%100==0): #to reduce the number of plots for every 100 loops
         n += 1
