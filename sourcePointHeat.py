@@ -18,32 +18,28 @@ diagonalMat1 = np.roll(diagonalMat,1)
 diagonalMat2 = np.roll(diagonalMat, -1)
 coeffMat = diagonalMat0 + diagonalMat1 + diagonalMat2
 ##############################################
-#fixing the first and last element of the coefficent matrix
-coeffMat[0][0] = 1.0
-coeffMat[99][99] = 1.0
 #initial tempreture of the line
 knownTemp = np.zeros(intervals)
-knownTemp[0] = tRight
-knownTemp[99] = tRight
 knownTemp[49] = tLeft
 #finial tempreture of the line
 unknownTemp = np.zeros(intervals)
 n = 0 #some constant to make png sequences
 for i in range(0,20000):
     unknownTemp = la.solve(coeffMat,knownTemp) #solving linear algebra Ax = b with scipy library
+    unknownTemp[49] = tLeft
+    unknownTemp[99] = unknownTemp[0]
     knownTemp[1:99] = unknownTemp[1:99] #giving the finial matrix values to initial matrix to start one more period
-    #knownTemp[50:99] = unknownTemp[50:99]
     if (i%200==0): #to reduce the number of plots for every 100 loops
         n += 1
         #to create an animation
-        plt.cla()
+        #plt.cla()
         plt.title('1D Heat Equation')
         plt.xlabel('intervals')
         plt.ylabel('Tempreture')
-        plt.ylim(0,5)
-        plt.plot(unknownTemp,'r-.',label='heat distribution')
+        #plt.ylim(0,5)
+        plt.plot(unknownTemp)
         plt.legend(loc='upper right')
-        plt.savefig('gif/heatEq{}.png'.format(n))
+        plt.savefig('gif1/heatEq{}.png'.format(n))
         plt.pause(0.01)
         time.sleep(0.01)
 
