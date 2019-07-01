@@ -18,9 +18,6 @@ diagonalMat1 = np.roll(diagonalMat,1)
 diagonalMat2 = np.roll(diagonalMat, -1)
 coeffMat = diagonalMat0 + diagonalMat1 + diagonalMat2
 ##############################################
-#fixing the first and last element of the coefficent matrix
-coeffMat[0][0] = 1.0
-coeffMat[99][99] = 1.0
 #initial tempreture of the line
 knownTemp = np.zeros(intervals)
 knownTemp[0] = tLeft
